@@ -44,11 +44,7 @@ Double-click  frontend/index.html  in your file manager
 ```
 The green "API Connected" badge confirms the backend is reachable.
 
-### 4. Regenerate PDF report (optional)
-```bash
-cd docs
-python generate_report.py
-```
+
 
 ---
 
