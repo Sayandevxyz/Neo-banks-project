@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Bank - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <!-- Logo / Title -->
+        <div class="auth-logo">
+            <h1>🏦 Neo Bank</h1>
+            <p>UPI Payment Simulator &nbsp;|&nbsp; Team 6</p>
+        </div>
+
+        <!-- Alert Box -->
+        <div class="alert alert-error" id="loginAlert"></div>
+
+        <!-- Login Form -->
+        <div class="form-group">
+            <label>Your UPI ID</label>
+            <input type="text" id="loginUpi" placeholder="e.g.  sayan@okicici" />
+        </div>
+
+        <button class="btn btn-primary" onclick="doLogin()" id="loginBtn">
+            Login
+        </button>
+
+        <div class="switch-link">
+            Don't have an account? &nbsp;<a href="register.html">Register Here</a>
+        </div>
+
+        <!-- Sample Users hint -->
+        <div style="margin-top:22px; background:#f0f4ff; border-radius:8px; padding:13px; font-size:12px; color:#555;">
+            <strong>Sample Users for Testing :</strong><br>
+            📍 sayan@okicici &nbsp;&nbsp; 📍 team6@ybl &nbsp;&nbsp; 📍 csbs@okhdfcbank
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Base URL of our Flask backend
+    const BASE_URL = "http://127.0.0.1:5000";
+
+    // show alert message
+    function showAlert(id, message, type) {
+        const el = document.getElementById(id);
+        el.className = "alert alert-" + type;
+        el.textContent = message;
+        el.style.display = "block";
+    }
+
+    // Login function
+    async function doLogin() {
+        const upi_id = document.getElementById("loginUpi").value.trim();
+        const btn    = document.getElementById("loginBtn");
+
+        if (!upi_id) {
+            showAlert("loginAlert", "Please enter your UPI ID", "error");
+            return;
+        }
+
+        // show loading
+        btn.innerHTML = '<span class="loader"></span> Logging in...';
+        btn.disabled  = true;
+
+        try {
+            // send POST request to backend
+            const response = await fetch(BASE_URL + "/login", {
+                method  : "POST",
+                headers : { "Content-Type": "application/json" },
+                body    : JSON.stringify({ upi_id: upi_id })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // save user info in localStorage so other pages can use it
+                localStorage.setItem("user", JSON.stringify(data.user));
+                // go to dashboard
+                window.location.href = "dashboard.html";
+            } else {
+                showAlert("loginAlert", data.message, "error");
+                btn.innerHTML = "Login";
+                btn.disabled  = false;
+            }
+
+        } catch (err) {
+            showAlert("loginAlert", "Cannot connect to server. Make sure backend is running.", "error");
+            btn.innerHTML = "Login";
+            btn.disabled  = false;
+        }
+    }
+
+    // allow pressing Enter key to login
+    document.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") doLogin();
+    });
+</script>
+
+</body>
+</html>

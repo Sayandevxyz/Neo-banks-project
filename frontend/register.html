@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Bank - Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <h1>🏦 Neo Bank</h1>
+            <p>Create Your Account</p>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert alert-error"   id="errorAlert"></div>
+        <div class="alert alert-success" id="successAlert"></div>
+
+        <!-- Register Form -->
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="regName" placeholder="e.g. sayan Mondal" />
+        </div>
+
+        <div class="form-group">
+            <label>UPI ID</label>
+            <input type="text" id="regUpi" placeholder="e.g. sayan@okicici" />
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="regPhone" placeholder="10-digit mobile number" maxlength="10" />
+        </div>
+
+        <div class="form-group">
+            <label>Initial Balance (Rs.)</label>
+            <input type="number" id="regBalance" placeholder="e.g. 5000" min="0" />
+        </div>
+
+        <button class="btn btn-primary" onclick="doRegister()" id="regBtn">
+            Create Account
+        </button>
+
+        <div class="switch-link">
+            Already have an account? &nbsp;<a href="index.html">Login Here</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const BASE_URL = "http://127.0.0.1:5000";
+
+    function showAlert(id, message, type) {
+        // hide all alerts first
+        document.getElementById("errorAlert").style.display   = "none";
+        document.getElementById("successAlert").style.display = "none";
+
+        const el      = document.getElementById(id);
+        el.className  = "alert alert-" + type;
+        el.textContent = message;
+        el.style.display = "block";
+    }
+
+    async function doRegister() {
+        const name    = document.getElementById("regName").value.trim();
+        const upi_id  = document.getElementById("regUpi").value.trim();
+        const phone   = document.getElementById("regPhone").value.trim();
+        const balance = document.getElementById("regBalance").value;
+        const btn     = document.getElementById("regBtn");
+
+        // basic check - all fields required
+        if (!name || !upi_id || !phone || !balance) {
+            showAlert("errorAlert", "Please fill in all fields", "error");
+            return;
+        }
+
+        // show loading
+        btn.innerHTML = '<span class="loader"></span> Creating account...';
+        btn.disabled  = true;
+
+        try {
+            const response = await fetch(BASE_URL + "/register", {
+                method  : "POST",
+                headers : { "Content-Type": "application/json" },
+                body    : JSON.stringify({
+                    name    : name,
+                    upi_id  : upi_id,
+                    phone   : phone,
+                    balance : parseFloat(balance)
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showAlert("successAlert", "Account created! Redirecting to login...", "success");
+                // wait 2 seconds then go to login
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 2000);
+            } else {
+                showAlert("errorAlert", data.message, "error");
+                btn.innerHTML = "Create Account";
+                btn.disabled  = false;
+            }
+
+        } catch (err) {
+            showAlert("errorAlert", "Cannot connect to server. Make sure backend is running.", "error");
+            btn.innerHTML = "Create Account";
+            btn.disabled  = false;
+        }
+    }
+</script>
+
+</body>
+</html>

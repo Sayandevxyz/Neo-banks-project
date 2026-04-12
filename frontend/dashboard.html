@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Bank - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">🏦 Neo<span>Bank</span></div>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="send_money.html">Send Money</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+        <div class="welcome">Welcome back,</div>
+        <div class="user-name" id="userName">Loading...</div>
+        <div class="balance-label">Available Balance</div>
+        <div class="balance-amount" id="userBalance">Rs. ---</div>
+        <div class="upi-id-text" id="userUpiId">UPI ID : ---</div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a class="action-btn" href="send_money.html">
+            <div class="icon">💸</div>
+            <div class="label">Send Money</div>
+        </a>
+        <a class="action-btn" href="transactions.html">
+            <div class="icon">📋</div>
+            <div class="label">Transactions</div>
+        </a>
+        <a class="action-btn" href="register.html">
+            <div class="icon">➕</div>
+            <div class="label">Add User</div>
+        </a>
+    </div>
+
+    <!-- Recent Transactions Section -->
+    <div class="card">
+        <h2>Recent Transactions</h2>
+        <div id="recentTxns">
+            <p style="color:#aaa; font-size:14px;">Loading...</p>
+        </div>
+    </div>
+
+    <div class="footer">Neo Bank UPI Simulator &nbsp;|&nbsp; Team 6 &nbsp;|&nbsp; Project 6</div>
+</div>
+
+<script>
+    const BASE_URL = "http://127.0.0.1:5000";
+
+    // get user from localStorage (saved during login)
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    // if not logged in, go to login page
+    if (!user) {
+        window.location.href = "index.html";
+    }
+
+    // show user info on page
+    document.getElementById("userName").textContent    = user.name;
+    document.getElementById("userBalance").textContent = "Rs. " + user.balance.toFixed(2);
+    document.getElementById("userUpiId").textContent   = "UPI ID : " + user.upi_id;
+
+    // logout function
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    }
+
+    // load fresh balance from backend
+    async function loadBalance() {
+        try {
+            const response = await fetch(BASE_URL + "/balance/" + user.upi_id);
+            const data     = await response.json();
+            if (data.success) {
+                document.getElementById("userBalance").textContent = "Rs. " + data.balance.toFixed(2);
+                // update localStorage too
+                user.balance = data.balance;
+                localStorage.setItem("user", JSON.stringify(user));
+            }
+        } catch (err) {
+            console.log("Could not load balance:", err);
+        }
+    }
+
+    // load recent 5 transactions
+    async function loadRecentTxns() {
+        try {
+            const response = await fetch(BASE_URL + "/transactions/" + user.upi_id + "?n=5");
+            const data     = await response.json();
+
+            const container = document.getElementById("recentTxns");
+
+            if (!data.success || data.transactions.length === 0) {
+                container.innerHTML = '<p style="color:#aaa; font-size:14px;">No transactions yet. Send some money!</p>';
+                return;
+            }
+
+            // build table HTML
+            let html = '<table class="txn-table"><thead><tr>';
+            html += '<th>Txn ID</th><th>From / To</th><th>Amount</th><th>Date & Time</th><th>Status</th>';
+            html += '</tr></thead><tbody>';
+
+            for (let txn of data.transactions) {
+                // check if this user is sender or receiver
+                let isDebit  = txn.sender_upi === user.upi_id;
+                let arrow    = isDebit ? "→ " + txn.receiver_upi : "← " + txn.sender_upi;
+                let amtClass = isDebit ? "debit" : "credit";
+                let amtSign  = isDebit ? "- Rs. " : "+ Rs. ";
+
+                html += '<tr>';
+                html += '<td>' + txn.txn_id + '</td>';
+                html += '<td>' + arrow + '</td>';
+                html += '<td class="' + amtClass + '">' + amtSign + txn.amount.toFixed(2) + '</td>';
+                html += '<td>' + txn.timestamp + '</td>';
+                html += '<td><span class="badge-success">' + txn.status + '</span></td>';
+                html += '</tr>';
+            }
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+        } catch (err) {
+            document.getElementById("recentTxns").innerHTML =
+                '<p style="color:#e74c3c; font-size:14px;">Could not load transactions. Check if backend is running.</p>';
+        }
+    }
+
+    // run when page loads
+    loadBalance();
+    loadRecentTxns();
+</script>
+
+</body>
+</html>
