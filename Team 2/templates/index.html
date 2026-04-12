@@ -1,0 +1,178 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Neo Bank Auth</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+        }
+
+        .secondary-btn:hover {
+            background: #495057;
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ================= LOGIN PAGE ================= -->
+<div id="loginPage">
+    <h2>Login</h2>
+
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+
+    <button onclick="login()">Login</button>
+
+    <p id="loginMsg"></p>
+</div>
+
+
+<!-- ================= OTP PAGE ================= -->
+<div id="otpPage" style="display:none;">
+    <h2>Enter OTP</h2>
+
+    <input type="text" id="otp" placeholder="Enter OTP"><br>
+
+    <button onclick="verifyOtp()">Verify OTP</button>
+    <button onclick="resendOtp()">Resend OTP</button>
+    <button class="secondary-btn" onclick="goBack()">Go Back</button>
+
+    <p id="otpMsg"></p>
+</div>
+
+</div>
+
+
+<script>
+let currentUser = "";
+
+// ================= LOGIN =================
+function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("loginMsg").innerText = data.message;
+
+        if (data.status === "success") {
+            currentUser = username;
+
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("otpPage").style.display = "block";
+        }
+    });
+}
+
+
+// ================= GO BACK =================
+function goBack() {
+    document.getElementById("otp").value = "";
+    document.getElementById("otpMsg").innerText = "";
+    document.getElementById("loginMsg").innerText = "";
+
+    document.getElementById("otpPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "block";
+
+    currentUser = "";
+}
+
+
+// ================= VERIFY OTP =================
+function verifyOtp() {
+    const otp = document.getElementById("otp").value;
+
+    fetch("http://127.0.0.1:5000/verify-otp", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: currentUser,
+            otp: otp
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("otpMsg").innerText = data.message;
+    });
+}
+
+
+// ================= RESEND OTP =================
+function resendOtp() {
+    fetch("http://127.0.0.1:5000/resend-otp", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: currentUser
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("otpMsg").innerText = data.message;
+    });
+}
+</script>
+
+</body>
+</html>
