@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>neobank</title>
+
+    <!-- Apple-like font -->
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'SF Pro Display', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a0000);
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-top: 30px;
+            background: linear-gradient(90deg, red, #ff4d4d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            width: 60%;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(255, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #ff4d4d;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            border: none;
+            width: 200px;
+            background: #111;
+            color: white;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 8px red;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, red, #ff1a1a);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px red;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 85%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(90deg, red, #ff4d4d);
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+
+        .logo {
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: #ff4d4d;
+            margin-top: -10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>neobank</h1>
+<div class="logo">SMART DIGITAL BANKING</div>
+
+<div class="container">
+
+    <form method="POST">
+
+        <h3>Last N Transactions</h3>
+        <input type="number" name="n" placeholder="Enter number">
+        <button name="option" value="last">Get Last N</button>
+
+        <h3>Date-wise Filter</h3>
+        <input type="date" name="start">
+        <input type="date" name="end">
+        <button name="option" value="date">Filter by Date</button>
+
+        <h3>Customer-wise Filter</h3>
+        <input type="number" name="user_id" placeholder="Enter user ID">
+        <button name="option" value="user">Filter by User</button>
+
+    </form>
+
+</div>
+
+<h3>Transactions</h3>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>User</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Type</th>
+</tr>
+
+{% for row in data %}
+<tr>
+    {% for item in row %}
+    <td>{{ item }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
