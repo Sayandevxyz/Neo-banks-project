@@ -22,7 +22,6 @@ Team 6
 │   └── script.js
 └── README.md
 ```
-
 ---
 
 ## ⚙️ Setup
