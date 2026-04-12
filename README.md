@@ -3,11 +3,10 @@
 > A collaborative full-stack digital banking simulation built by 11 teams.
 > Each team owns one core module of a modern neo-banking platform.
 
-![GitHub](https://img.shields.io/badge/repo-Neo--banks--project-0f172a?style=flat-square&logo=github)](https://github.com/Sayandevxyz/Neo-banks-project)
-![Teams](https://img.shields.io/badge/11%20Teams-Active-6366f1?style=flat-square)
-![Stack](https://img.shields.io/badge/Python%20·%20Flask%20·%20SQLite%20·%20HTML%2FCSS%2FJS-orange?style=flat-square)
-![Branch](https://img.shields.io/badge/branch-main-22c55e?style=flat-square)
-
+[![Repo](https://img.shields.io/badge/Repo-Neo--banks--project-0f172a?style=flat-square&logo=github)](https://github.com/Sayandevxyz/Neo-banks-project)
+![Teams](https://img.shields.io/badge/Teams-11%20Active-6366f1?style=flat-square)
+![Tech Stack](https://img.shields.io/badge/Stack-Python%20·%20Flask%20·%20SQLite%20·%20HTML%2FCSS%2FJS-orange?style=flat-square)
+![Branch](https://img.shields.io/badge/Branch-main-22c55e?style=flat-square)
 ---
 
 ## 📌 About This Project
