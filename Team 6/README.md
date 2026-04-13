@@ -113,7 +113,7 @@
 │
 ├── 📄 README.md
 ├── 📄 .gitignore
-└── 📄 start.txt
+
 ```
 
 ---
@@ -274,7 +274,7 @@ CREATE TABLE transactions (
 ---
 
 <div align="center">
-<h2>👑 &nbsp; Project Lead</h2>
+<h2>👑 &nbsp; Team Lead</h2>
 </div>
 
 <div align="center">
