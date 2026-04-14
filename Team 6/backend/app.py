@@ -2,15 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import re
 import datetime
-import database   # our own database file
+import database  
 
-# create flask app
+
 app = Flask(__name__)
-CORS(app)   # this allows frontend to talk to backend
-
-# -------------------------------------------------------
-# Helper Function : Validate UPI ID Format
-# -------------------------------------------------------
+CORS(app)   
 
 def validate_upi(upi_id):
     pattern = r"^[a-zA-Z0-9._-]+@[a-z]{3,10}$"
@@ -24,7 +20,7 @@ def validate_upi(upi_id):
 @app.route("/register", methods=["POST"])
 def register():
 
-    # get data sent from frontend
+    
     data = request.get_json()
 
     name    = data.get("name", "").strip()
@@ -33,19 +29,19 @@ def register():
     balance = data.get("balance", 0)
     Email   = data.get("Email", "").strip()
 
-    # check all fields are filled
+    
     if not name or not upi_id or not phone or not Email:
         return jsonify({"success": False, "message": "All fields are required"}), 400
 
-    # check phone number
+    
     if not phone.isdigit() or len(phone) != 10:
         return jsonify({"success": False, "message": "Phone number must be 10 digits"}), 400
 
-    # check upi format
+    
     if not validate_upi(upi_id):
         return jsonify({"success": False, "message": "Invalid UPI ID format. Use : username@bankcode"}), 400
 
-    # check balance
+    
     try:
         balance = float(balance)
     except:
@@ -54,12 +50,12 @@ def register():
     if balance < 0:
         return jsonify({"success": False, "message": "Balance cannot be negative"}), 400
 
-    # check if upi id already exists
+    
     existing = database.get_user(upi_id)
     if existing:
         return jsonify({"success": False, "message": "This UPI ID is already registered"}), 400
 
-    # save user in database
+    
     database.add_user(name, upi_id, phone, balance, Email)
 
     return jsonify({"success": True, "message": "User registered successfully!", "upi_id": upi_id})
@@ -124,18 +120,18 @@ def send_money():
     amount       = data.get("amount", 0)
     Email        = data.get("email", "").strip()
 
-    # validate upi ids
+    
     if not validate_upi(sender_upi):
         return jsonify({"success": False, "message": "Sender UPI ID is invalid"}), 400
 
     if not validate_upi(receiver_upi):
         return jsonify({"success": False, "message": "Receiver UPI ID is invalid"}), 400
 
-    # sender and receiver should not be same
+    
     if sender_upi == receiver_upi:
         return jsonify({"success": False, "message": "You cannot send money to yourself"}), 400
 
-    # check amount
+   
     try:
         amount = float(amount)
     except:
@@ -144,7 +140,7 @@ def send_money():
     if amount <= 0:
         return jsonify({"success": False, "message": "Amount must be greater than zero"}), 400
 
-    # check if both accounts exist
+   
     sender   = database.get_user(sender_upi)
     receiver = database.get_user(receiver_upi)
 
@@ -154,14 +150,14 @@ def send_money():
     if not receiver:
         return jsonify({"success": False, "message": "Receiver account not found"}), 404
 
-    # check sender balance
+    
     if sender["balance"] < amount:
         return jsonify({
             "success" : False,
             "message" : "Insufficient balance. Your balance is Rs. " + str(sender["balance"])
         }), 400
 
-    # do the transaction in database
+    
     txn_id    = database.do_transaction(sender_upi, receiver_upi, amount)
     new_bal   = sender["balance"] - amount
     timestamp = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
@@ -182,7 +178,7 @@ def send_money():
 @app.route("/transactions/<upi_id>", methods=["GET"])
 def get_transactions(upi_id):
 
-    # get n from query parameter, default is 5
+    
     n = request.args.get("n", 5)
 
     try:
