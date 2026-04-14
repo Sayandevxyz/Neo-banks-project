@@ -1,8 +1,7 @@
 # ============================================================
 #  database.py
 #  Handles all SQLite database operations
-#  Team Number : 6
-# ============================================================
+
 
 import sqlite3
 import datetime
@@ -11,9 +10,6 @@ import datetime
 DB_NAME = "neobank.db"
 
 
-# -------------------------------------------------------
-# Connect to database
-# -------------------------------------------------------
 
 def connect():
     conn = sqlite3.connect(DB_NAME)
@@ -21,9 +17,6 @@ def connect():
     return conn
 
 
-# -------------------------------------------------------
-# Create Tables (run once at start)
-# -------------------------------------------------------
 
 def create_tables():
 
@@ -32,12 +25,13 @@ def create_tables():
 
     # users table
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS user (
             id      INTEGER PRIMARY KEY AUTOINCREMENT,
             name    TEXT    NOT NULL,
             upi_id  TEXT    UNIQUE NOT NULL,
             phone   TEXT    NOT NULL,
-            balance REAL    DEFAULT 0.0
+            balance REAL    DEFAULT 0.0,
+            Email   TEXT    NOT NULL
         )
     """)
 
@@ -59,45 +53,38 @@ def create_tables():
     print("  >> Database tables ready")
 
 
-# -------------------------------------------------------
-# Add Sample Users (for testing)
-# -------------------------------------------------------
+
 
 def add_sample_data():
 
-    # check if sample users already exist
     existing = get_user("sayan@okicici")
     if existing:
-        return   # already added, skip
+        return
 
-    add_user("sayan", "sayan@okicici", "9876543210", 5000.0)
-    add_user("team6",  "team6@ybl",     "9123456789", 2000.0)
-    add_user("csbs",   "csbs@okhdfcbank","9988776655", 8000.0)
+    add_user("sayan", "sayan@okicici", "9876543210", 5000.0, "sayan@gmail.com")
+    add_user("team6", "team6@ybl", "9123456789", 2000.0, "team6@gmail.com")
+    add_user("csbs", "csbs@okhdfcbank", "9988776655", 8000.0, "csbs@gmail.com")
 
     print("  >> Sample users added for testing")
 
 
-# -------------------------------------------------------
-# Add a New User
-# -------------------------------------------------------
 
-def add_user(name, upi_id, phone, balance):
+
+def add_user(name, upi_id, phone, balance, email):
 
     conn   = connect()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT OR IGNORE INTO users (name, upi_id, phone, balance)
-    VALUES (?, ?, ?, ?)
-""", (name, upi_id, phone, balance))
+    INSERT OR IGNORE INTO users (name, upi_id, phone, balance, Email)
+    VALUES (?, ?, ?, ?, ?)
+      """, (name, upi_id, phone, balance, email))
 
     conn.commit()
     conn.close()
 
 
-# -------------------------------------------------------
-# Get One User by UPI ID
-# -------------------------------------------------------
+
 
 def get_user(upi_id):
 
@@ -114,9 +101,7 @@ def get_user(upi_id):
     return None
 
 
-# -------------------------------------------------------
-# Get All Users
-# -------------------------------------------------------
+
 
 def get_all_users():
 
@@ -131,10 +116,7 @@ def get_all_users():
     return [dict(row) for row in rows]
 
 
-# -------------------------------------------------------
-# Do a Transaction (send money)
-# Updates balances and saves transaction record
-# -------------------------------------------------------
+
 
 def do_transaction(sender_upi, receiver_upi, amount):
 
