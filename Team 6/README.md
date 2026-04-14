@@ -35,7 +35,7 @@
 <h2>🎯 &nbsp; What is Neo Bank?</h2>
 </div>
 
-> **Neo Bank** is a fully functional **UPI Payment Simulator** built as a full-stack web application. It replicates core digital banking features — from account creation to peer-to-peer money transfers — with a clean UI, RESTful API, and persistent SQLite storage. Designed for learning, demonstrations, and hackathon showcases.
+> **Neo Bank** is a fully functional **UPI Payment Simulator** built as a web application. It replicates core digital banking features — from account creation to peer-to-peer money transfers — with a clean UI, RESTful API, and persistent SQLite storage.
 
 <div align="center">
 
@@ -74,15 +74,14 @@
 
 ### 📊 Dashboard
 - Live balance display
-- Aggregate statistics
 - Quick-send functionality
-- API health indicator badge
+
 
 ### 📜 Transaction History
 - Full chronological log
 - Success / Failed status labels
 - Sender & receiver UPI IDs
-- Optional transaction notes
+
 
 </td>
 </tr>
