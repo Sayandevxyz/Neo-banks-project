@@ -1,12 +1,7 @@
-/* ============================================================
-   style.css - Neo Bank UPI Simulator
-   Team Number : 6
-   ============================================================ */
 
-/* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* Reset and base */
+
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +15,7 @@ body {
     min-height: 100vh;
 }
 
-/* ---- Top Navigation Bar ---- */
+
 .navbar {
     background-color: #1a1a7e;
     color: white;
@@ -56,14 +51,14 @@ body {
     text-decoration: underline;
 }
 
-/* ---- Page Container ---- */
+
 .container {
     max-width: 900px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* ---- Card ---- */
+
 .card {
     background: white;
     border-radius: 14px;
@@ -81,7 +76,7 @@ body {
     border-bottom: 2px solid #e8ecff;
 }
 
-/* ---- Balance Card (special) ---- */
+
 .balance-card {
     background: linear-gradient(135deg, #1a1a7e, #3a3acd);
     color: white;
@@ -122,7 +117,7 @@ body {
     margin-top: 15px;
 }
 
-/* ---- Form Styles ---- */
+
 .form-group {
     margin-bottom: 18px;
 }
@@ -154,7 +149,7 @@ body {
     background: white;
 }
 
-/* ---- Buttons ---- */
+
 .btn {
     display: inline-block;
     padding: 12px 28px;
@@ -196,7 +191,7 @@ body {
     color: white;
 }
 
-/* ---- Quick Action Buttons (Dashboard) ---- */
+
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -233,7 +228,7 @@ body {
     color: #1a1a7e;
 }
 
-/* ---- Alert Messages ---- */
+
 .alert {
     padding: 13px 18px;
     border-radius: 8px;
@@ -261,7 +256,7 @@ body {
     border-left: 4px solid #17a2b8;
 }
 
-/* ---- Transaction Table ---- */
+
 .txn-table {
     width: 100%;
     border-collapse: collapse;
@@ -306,7 +301,7 @@ body {
     font-weight: 600;
 }
 
-/* ---- Login / Register Page (centered) ---- */
+
 .auth-wrapper {
     min-height: 100vh;
     display: flex;
@@ -359,7 +354,7 @@ body {
     text-decoration: underline;
 }
 
-/* ---- Receipt Box ---- */
+
 .receipt-box {
     background: #f5f7ff;
     border: 1px dashed #b0baff;
@@ -398,7 +393,7 @@ body {
     color: #1a1a7e;
 }
 
-/* ---- Page Title ---- */
+
 .page-title {
     font-size: 20px;
     font-weight: 700;
@@ -412,7 +407,7 @@ body {
     margin-bottom: 25px;
 }
 
-/* ---- Footer ---- */
+
 .footer {
     text-align: center;
     padding: 20px;
@@ -421,7 +416,7 @@ body {
     margin-top: 20px;
 }
 
-/* ---- Loader ---- */
+
 .loader {
     display: inline-block;
     width: 16px;
@@ -438,7 +433,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* ---- Responsive ---- */
+
 @media (max-width: 600px) {
     .quick-actions {
         grid-template-columns: 1fr 1fr;
