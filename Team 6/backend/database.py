@@ -1,8 +1,3 @@
-# ============================================================
-#  database.py
-#  Handles all SQLite database operations
-
-
 import sqlite3
 import datetime
 
@@ -123,24 +118,24 @@ def do_transaction(sender_upi, receiver_upi, amount):
     conn   = connect()
     cursor = conn.cursor()
 
-    # deduct from sender
+   
     cursor.execute("""
         UPDATE users SET balance = balance - ?
         WHERE upi_id = ?
     """, (amount, sender_upi))
 
-    # add to receiver
+    
     cursor.execute("""
         UPDATE users SET balance = balance + ?
         WHERE upi_id = ?
     """, (amount, receiver_upi))
 
-    # generate transaction id
+    
     cursor.execute("SELECT COUNT(*) FROM transactions")
     count  = cursor.fetchone()[0]
     txn_id = "TXN" + str(1000 + count + 1)
 
-    # save transaction record
+    
     timestamp = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
     cursor.execute("""
@@ -152,11 +147,6 @@ def do_transaction(sender_upi, receiver_upi, amount):
     conn.close()
 
     return txn_id
-
-
-# -------------------------------------------------------
-# Get Last N Transactions for a User
-# -------------------------------------------------------
 
 def get_transactions(upi_id, n):
 
